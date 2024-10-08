@@ -1,0 +1,14 @@
+.button{
+	-fx-background-color:#0fbcf9;
+	-fx-text-fill:#ffffff;
+	-fx-content-display:center;
+	-fx-background-radius: 5px;
+	-fx-alignment:center;
+	-fx-effect:dropshadow(three-pass-box,rgb(0,0,0,0.5),5,0,0,5);
+
+}
+.button:hover{
+	-fx-effect:none;
+	-fx-cursor:hand;
+	
+}
