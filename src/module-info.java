@@ -9,5 +9,6 @@ module ProjetDevops {
 	requires javafx.graphics;
 	exports ProjDev1;
 	requires java.sql;
+	requires org.junit.jupiter.api;
 
 }

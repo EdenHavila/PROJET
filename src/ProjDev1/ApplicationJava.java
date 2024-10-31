@@ -9,10 +9,10 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -22,9 +22,12 @@ public class ApplicationJava extends Application{
 private Label labelMatricule;
 private static TextField inputMatricule;
 private Button buttonValider;
+private Button buttonVider;
 private Button buttonDetails;
 private static Label labelDecision;
 private HBox buttonContainer;
+//private HBox alignementInputButtonVider;
+
 private static Label labelDetails;
 
 
@@ -35,25 +38,41 @@ private static Label labelDetails;
 		VBox root=new VBox(10);
 
 		labelMatricule=new Label("Veuillez entrer votre Matricule");
+		labelMatricule.setId("labelMatricule");
 		inputMatricule=new TextField();
+		inputMatricule.setId("inputMatricule");
 		buttonValider=new Button("VALIDER");
+		buttonVider=new Button("");
+		buttonVider.setId("buttonVider");
+		//buttonVider.setId("buttonVider");
 		buttonDetails=new Button("DETAILS");
 		labelDecision=new Label();
 		labelDetails=new Label();
-		buttonContainer=new HBox(20);
+		buttonContainer=new HBox(20);//le hbox des boutons valider et detail
+		//alignementInputButtonVider=new HBox(5);
 		//	buttonDetails.setDisable(true);
 		
 				
 		
 		
 		// TODO Auto-generated method stub
-
+		//alignementInputButtonVider.getChildren().addAll(inputMatricule,buttonVider);
 		buttonContainer.getChildren().addAll(buttonValider,buttonDetails);
-		root.getChildren().addAll(labelMatricule,inputMatricule,buttonContainer,labelDecision,labelDetails);
+		root.getChildren().addAll(labelMatricule,inputMatricule,buttonVider,buttonContainer,labelDecision,labelDetails);
 		
+		
+		//evenement lorsqu'on clique sur les boutons
+		
+		buttonVider.setOnAction(e->{
+			inputMatricule.setText("");
+			labelDetails.setText("");
+			labelDecision.setText("");
+		});
 
 		buttonValider.setOnAction(e->{
 			verificationResultat();
+			labelDetails.setText("");
+
 		});
 
 		buttonDetails.setOnAction(e->{
@@ -62,10 +81,9 @@ private static Label labelDetails;
 
 
 
+
 		
-		
-		
-		
+		primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("iconeApp.jpg")));//concerne l'icone de l'app
 		Scene scene=new Scene(root);
  		scene.getStylesheets().add(getClass().getResource("/ressources/style").toString());
 		root.setAlignment(Pos.CENTER);//centrer les elments de la scene
@@ -74,8 +92,8 @@ private static Label labelDetails;
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Matricule");
 		primaryStage.show();
-		primaryStage.setHeight(400);//taille de la fenetre
-		primaryStage.setWidth(400);
+		primaryStage.setHeight(600);//taille de la fenetre
+		primaryStage.setWidth(450);
 		primaryStage.setResizable(false);
 		primaryStage.centerOnScreen();//mettre la fenetre au centre de notre ecran
 
@@ -108,8 +126,8 @@ private static Label labelDetails;
                 buttonDetails.setDisable(false);
             } else {
             	labelDecision.setText("Aucun résultat trouvé");
-                labelDecision.setTextFill(Color.RED);       	
-                buttonDetails.setDisable(true);
+                labelDecision.setTextFill(Color.RED);  
+                buttonDetails.setDisable(true);//lorsqu'aucun resultat n'est trouvé le bouton details est désactivé
 
             }
         } catch (SQLException e) {
@@ -128,7 +146,7 @@ private static Label labelDetails;
             pst.setString(1, matricule);
             ResultSet resultSet = pst.executeQuery();
 
-            while (resultSet.next()) {
+            if (resultSet.next()) {
                 String matriculeEtudiant = resultSet.getString("matricule");
                 String nom = resultSet.getString("nom");
                 String prenom = resultSet.getString("prenom");
@@ -136,7 +154,6 @@ private static Label labelDetails;
                 String ecole = resultSet.getString("ecole");
                 Double moyenne = resultSet.getDouble("moyenne");
                 
-                if( matricule != " ") {
                      labelDetails.setText(
                     			"Matricule: " + matriculeEtudiant +
                                 "\nNom: " + nom +
@@ -155,13 +172,13 @@ private static Label labelDetails;
 		                         labelDecision.setTextFill(Color.RED);
 		                     }    
 			                
-	                }else {
-	                	labelDecision.setText("Veuillez entrer un matricule correct");
-	                }
-
-               	
+	            
            
-        } 
+        }else {
+        	labelDecision.setText("Veuillez entrer un matricule correct!!!");
+            labelDecision.setTextFill(Color.RED);
+
+        }
     }catch (SQLException e) {
         e.printStackTrace();
     }
